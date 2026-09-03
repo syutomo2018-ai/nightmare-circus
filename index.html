@@ -299,7 +299,6 @@ h1 {
 
 <div id="jumpscare">
 
-    <!-- あなたのGitHubに合わせて「clown_jumpscare.png」に修正しました -->
     <img src="clown_jumpscare.png" alt="ピエロ">
 
 </div>
@@ -368,9 +367,7 @@ const final =
 /* ====================
    音声設定
 ==================== */
-
-// リネームした「scream.mp3」を直接読み込むように設定しました
-const scream = new Audio("scream.mp3");
+const scream = new Audio("https://soundeffect-lab.info");
 
 
 /* ====================
@@ -385,14 +382,11 @@ enterButton.addEventListener("click", function() {
     /* Loading表示 */
     loading.style.display = "flex";
 
-    /* 自動再生ブロック対策（音量0で先読み再生） */
-    scream.volume = 0.0;
-    scream.play().then(function() {
-        console.log("音声の事前再生に成功");
-    }).catch(function(error) {
-        console.log("事前再生エラー:", error);
-    });
-
+    /* 
+       【修正】クリックした瞬間に音声を一時停止（読み込みだけ行う）の状態で、
+       あらかじめ一番最後まで「先読み（プリロード）」を強制させます。
+    */
+    scream.load();
 
     /*
        2秒待つ（ローディング時間）
@@ -404,19 +398,20 @@ enterButton.addEventListener("click", function() {
 
 
         /* ====================
-           ピエロ登場
+           ピエロ登場と音声を【完全同期】
         ==================== */
-        jumpscare.style.display = "block";
-
-        /* 画面を揺らす */
-        jumpscare.classList.add("shake");
-
-
-        /* ====================
-           叫び声（音量を戻す）
-        ==================== */
+        // 再生位置の初期化と音量をセットしてから同時に実行
         scream.currentTime = 0;
         scream.volume = 1.0;
+        
+        // 画像表示
+        jumpscare.style.display = "block";
+        jumpscare.classList.add("shake");
+
+        // 音声再生（完全に同時にスタート）
+        scream.play().catch(function(error) {
+            console.log("音声再生エラー:", error);
+        });
 
 
         /*
