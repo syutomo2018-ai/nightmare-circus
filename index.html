@@ -264,14 +264,14 @@ h1 {
 
 
 <!-- ====================
-     最初の画面
+     最初の画面（タイトルを「悪夢のサーカス」に修正）
 ==================== -->
 
 <div id="start">
 
     <div class="circus">🎪</div>
 
-    <h1>悪夢 of サーカス</h1>
+    <h1>悪夢のサーカス</h1>
 
     <div class="subtitle">
         もうすぐ開演します。
@@ -323,7 +323,6 @@ h1 {
     </div>
 
 
-    <!-- 【修正】エラーの原因となる余計なコードを削除し、純粋なプロフィールリンクに修正しました -->
     <a
         class="instagram"
         href="https://instagram.com"
@@ -381,53 +380,63 @@ enterButton.addEventListener("click", function() {
     /* Loading表示 */
     loading.style.display = "flex";
 
-    /* 音声ファイルの先読み（ロード）を開始 */
+    /* 
+       【修正：フリーズ対策】
+       不具合の原因になっていた音声完了の待機（addEventListener）をすべて廃止し、
+       元の確実な「2秒待ちタイマー」に戻しました。
+       クリックした瞬間に音声を裏側でロードさせます。
+    */
     scream.load();
 
-    // 音声データの準備が完全に整った瞬間に発動する処理（完全同期）
-    scream.addEventListener("canplaythrough", function startJumpscare() {
+
+    /*
+       確実に2秒待つ（ローディング時間）
+    */
+    setTimeout(function() {
+
+        /* Loadingを消す */
+        loading.style.display = "none";
+
+
+        /* ====================
+           ピエロ登場
+        ==================== */
+        jumpscare.style.display = "block";
+        jumpscare.classList.add("shake");
+
+
+        /* ====================
+           叫び声
+        ==================== */
+        scream.currentTime = 0;
+        scream.volume = 1.0;
         
-        scream.removeEventListener("canplaythrough", startJumpscare);
+        scream.play().catch(function(error) {
+            console.log("音声再生エラー:", error);
+        });
 
+
+        /*
+           1.5秒間ピエロを表示
+        */
         setTimeout(function() {
-            
-            /* Loadingを消す */
-            loading.style.display = "none";
 
-            /* 音声設定を最適化 */
-            scream.currentTime = 0;
-            scream.volume = 1.0;
-            
-            /* 画像表示と音声再生を完全に同時に実行 */
-            jumpscare.style.display = "block";
-            jumpscare.classList.add("shake");
+            /* ピエロを消す */
+            jumpscare.classList.remove("shake");
+            jumpscare.style.display = "none";
 
-            scream.play().catch(function(error) {
-                console.log("音声再生エラー:", error);
-            });
+            /* ====================
+               最終画面
+            ==================== */
+            final.style.display = "flex";
 
-            /*
-               1.5秒間ピエロを表示
-            */
-            setTimeout(function() {
+            // 最終画面になったら叫び声を止める
+            scream.pause();
 
-                /* ピエロを消す */
-                jumpscare.classList.remove("shake");
-                jumpscare.style.display = "none";
+        }, 1500);
 
-                /* ====================
-                   最終画面
-                ==================== */
-                final.style.display = "flex";
 
-                // 最終画面になったら叫び声を止める
-                scream.pause();
-
-            }, 1500);
-
-        }, 300);
-
-    });
+    }, 2000);
 
 });
 
