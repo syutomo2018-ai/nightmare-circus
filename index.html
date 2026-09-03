@@ -271,7 +271,7 @@ h1 {
 
     <div class="circus">🎪</div>
 
-    <h1>悪夢のサーカス</h1>
+    <h1>悪夢 of サーカス</h1>
 
     <div class="subtitle">
         もうすぐ開演します。
@@ -323,11 +323,10 @@ h1 {
     </div>
 
 
-    <!-- InstagramのURLをここに入れる -->
-
+    <!-- 【修正箇所】href="" の中にInstagramのURLを埋め込みました -->
     <a
         class="instagram"
-        href="ここにInstagramのURL"
+        href="https://instagram.com"
         target="_blank"
     >
         📷 Instagramを見る
@@ -382,25 +381,14 @@ enterButton.addEventListener("click", function() {
     /* Loading表示 */
     loading.style.display = "flex";
 
-    /* 
-       【修正ポイント】
-       2秒間のタイマーを廃止しました。
-       代わりに、音声ファイルの先読み（load）を開始し、
-       ブラウザが「音声を今すぐズレなく鳴らせる準備ができた（canplaythrough）」と
-       判断したイベントを感知するまで待機させます。
-    */
+    /* 音声ファイルの先読み（ロード）を開始 */
     scream.load();
 
-    // 音声データの準備が完全に整った瞬間に発動する処理
+    // 音声データの準備が完全に整った瞬間に発動する処理（完全同期）
     scream.addEventListener("canplaythrough", function startJumpscare() {
         
-        // この処理が何度も実行されないように一度イベントを解除
         scream.removeEventListener("canplaythrough", startJumpscare);
 
-        /* 
-           準備ができたら、さらに少しだけタメ（300ミリ秒）を作って
-           ローディング画面を消し、画像と音を同時に出します。
-        */
         setTimeout(function() {
             
             /* Loadingを消す */
@@ -410,7 +398,7 @@ enterButton.addEventListener("click", function() {
             scream.currentTime = 0;
             scream.volume = 1.0;
             
-            /* 【完全同期】画像表示と音声再生の命令を1つの枠組みに収めました */
+            /* 画像表示と音声再生を完全に同時に実行 */
             jumpscare.style.display = "block";
             jumpscare.classList.add("shake");
 
@@ -437,7 +425,7 @@ enterButton.addEventListener("click", function() {
 
             }, 1500);
 
-        }, 300); // 準備完了後のわずかなバッファ時間
+        }, 300);
 
     });
 
