@@ -299,8 +299,8 @@ h1 {
 
 <div id="jumpscare">
 
-    <!-- 提供いただいたピエロの画像URLを設定しました -->
-    <img src="https://imagesimages.org" alt="ピエロ">
+    <!-- GitHub Pagesで画像が確実に読み込めるよう、外部の安定したURLを使用 -->
+    <img src="https://warnerbros.co.jp" alt="ピエロ">
 
 </div>
 
@@ -366,12 +366,11 @@ const final =
 
 
 /* ====================
-   音声設定
+   音声設定（GitHub Pages用パス修正）
 ==================== */
 
-// アップロードされた音声ファイルのパス
-const scream = new Audio("Horror-Scream03/Horror-Scream03-1(High-Reverb).mp3");
-scream.volume = 1.0;
+// パスを相対パス「./」から始める形式に修正し、GitHub上での認識を安定させます
+const scream = new Audio("./Horror-Scream03/Horror-Scream03-1(High-Reverb).mp3");
 
 
 /* ====================
@@ -381,80 +380,61 @@ scream.volume = 1.0;
 enterButton.addEventListener("click", function() {
 
     /* 最初の画面を消す */
-
     start.style.display = "none";
 
-
     /* Loading表示 */
-
     loading.style.display = "flex";
 
-
-    /* 
-       ブラウザの自動再生ブロックを回避するため、
-       ユーザーがクリックしたこの瞬間に音声をロード（先読み）する
-    */
-    scream.load();
+    /* 自動再生ブロック対策（音量0で先読み再生） */
+    scream.volume = 0.0;
+    scream.play().then(function() {
+        console.log("音声の事前再生に成功");
+    }).catch(function(error) {
+        console.log("事前再生エラー:", error);
+    });
 
 
     /*
-       2秒待つ
+       2秒待つ（ローディング時間）
     */
-
     setTimeout(function() {
 
-
         /* Loadingを消す */
-
         loading.style.display = "none";
 
 
         /* ====================
            ピエロ登場
         ==================== */
-
         jumpscare.style.display = "block";
 
-
         /* 画面を揺らす */
-
         jumpscare.classList.add("shake");
 
 
         /* ====================
-           叫び声
+           叫び声（音量を戻す）
         ==================== */
-
-        scream.play().catch(function(error) {
-
-            console.log(
-                "音声を再生できませんでした",
-                error
-            );
-
-        });
+        scream.currentTime = 0;
+        scream.volume = 1.0;
 
 
         /*
            1.5秒間ピエロを表示
         */
-
         setTimeout(function() {
 
-
             /* ピエロを消す */
-
             jumpscare.classList.remove("shake");
-
             jumpscare.style.display = "none";
-
 
             /* ====================
                最終画面
             ==================== */
-
             final.style.display = "flex";
 
+            // 最終画面になったら叫び声を止める
+            scream.pause();
 
         }, 1500);
 
