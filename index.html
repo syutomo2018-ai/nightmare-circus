@@ -323,9 +323,10 @@ h1 {
     </div>
 
 
+    <!-- 【完全修正】エラーの原因となる「?igsi=...」以降をすべて削除し、純粋なプロフィールアドレスに修正しました -->
     <a
         class="instagram"
-        href="https://instagram.com"
+        href="https://www.instagram.com/3no1obakeyasiki"
         target="_blank"
     >
         📷 Instagramを見る
@@ -365,7 +366,7 @@ const final =
 /* ====================
    音声設定
 ==================== */
-// あなたのGitHubの「scream.mp3」を直接読み込むように指定しました
+// あなたのGitHubの「scream.mp3」を読み込む設定のままにしています
 const scream = new Audio("scream.mp3");
 
 
@@ -381,18 +382,13 @@ enterButton.addEventListener("click", function() {
     /* Loading表示 */
     loading.style.display = "flex";
 
-    /* 
-       【スマホ音ブロック強制解除処理】
-       ユーザーが「入場する」ボタンをタップしたまさにその瞬間に、
-       音量を1.0にセットした状態で一度音声を再生させ、1ミリ秒後にすぐ一時停止（ストップ）させます。
-       これでスマホのブラウザへ「これはユーザーが自分の意志で鳴らした安全な音だ」と100%承認させます。
-    */
+    /* 【突破処理】タップされた瞬間に、一発だけ音声を「再生してすぐ一時停止」させます */
     scream.play().then(function() {
         scream.pause();
         scream.currentTime = 0;
-        console.log("スマホの音声アクティベート成功");
+        console.log("音声アクティベート成功");
     }).catch(function(error) {
-        console.log("アクティベートエラー:", error);
+        console.log("初期解除エラー:", error);
     });
 
     /*
@@ -410,7 +406,7 @@ enterButton.addEventListener("click", function() {
         jumpscare.classList.add("shake");
 
         /* ====================
-           叫び声（ここで本再生スタート）
+           叫び声（本再生）
         ==================== */
         scream.currentTime = 0;
         scream.volume = 1.0;
