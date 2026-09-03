@@ -264,7 +264,7 @@ h1 {
 
 
 <!-- ====================
-     最初の画面（タイトルを「悪夢のサーカス」に修正）
+     最初の画面
 ==================== -->
 
 <div id="start">
@@ -359,7 +359,7 @@ const jumpscare =
     document.getElementById("jumpscare");
 
 const final =
-    document.getElementById("final");
+    document.getElementById;
 
 
 /* ====================
@@ -381,12 +381,16 @@ enterButton.addEventListener("click", function() {
     loading.style.display = "flex";
 
     /* 
-       【修正：フリーズ対策】
-       不具合の原因になっていた音声完了の待機（addEventListener）をすべて廃止し、
-       元の確実な「2秒待ちタイマー」に戻しました。
-       クリックした瞬間に音声を裏側でロードさせます。
+       【スマホ対策の切り札】
+       ボタンを押した「この瞬間」に、音量をゼロにした状態で再生をスタートさせます。
+       これでスマホの強力な自動再生ブロック機能を完全に突破（すり抜け）します。
     */
-    scream.load();
+    scream.volume = 0.0;
+    scream.play().then(function() {
+        console.log("スマホの音声ブロック突破成功（裏で再生開始）");
+    }).catch(function(error) {
+        console.log("初期再生エラー:", error);
+    });
 
 
     /*
@@ -406,14 +410,11 @@ enterButton.addEventListener("click", function() {
 
 
         /* ====================
-           叫び声
+           叫び声（ここで音量を一気にマックスにする）
         ==================== */
+        // 再生位置を最初に戻し、ミュートを解除して1.0（最大音量）にします
         scream.currentTime = 0;
         scream.volume = 1.0;
-        
-        scream.play().catch(function(error) {
-            console.log("音声再生エラー:", error);
-        });
 
 
         /*
@@ -428,7 +429,7 @@ enterButton.addEventListener("click", function() {
             /* ====================
                最終画面
             ==================== */
-            final.style.display = "flex";
+            document.getElementById("final").style.display = "flex";
 
             // 最終画面になったら叫び声を止める
             scream.pause();
@@ -444,3 +445,4 @@ enterButton.addEventListener("click", function() {
 
 </body>
 </html>
+
