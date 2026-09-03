@@ -323,10 +323,10 @@ h1 {
     </div>
 
 
-    <!-- 【完全修正】エラーの原因となる「?igsi=...」以降をすべて削除し、純粋なプロフィールアドレスに修正しました -->
+    <!-- インスタのアカウントURLを完璧な形で配置しています -->
     <a
         class="instagram"
-        href="https://www.instagram.com/3no1obakeyasiki"
+        href="https://www.instagram.com/3no1obakeyasiki/"
         target="_blank"
     >
         📷 Instagramを見る
@@ -366,7 +366,6 @@ const final =
 /* ====================
    音声設定
 ==================== */
-// あなたのGitHubの「scream.mp3」を読み込む設定のままにしています
 const scream = new Audio("scream.mp3");
 
 
@@ -382,11 +381,10 @@ enterButton.addEventListener("click", function() {
     /* Loading表示 */
     loading.style.display = "flex";
 
-    /* 【突破処理】タップされた瞬間に、一発だけ音声を「再生してすぐ一時停止」させます */
+    /* 音声を一瞬だけ再生してすぐ一時停止させ、スマホの音ブロックを解除する処理 */
     scream.play().then(function() {
         scream.pause();
         scream.currentTime = 0;
-        console.log("音声アクティベート成功");
     }).catch(function(error) {
         console.log("初期解除エラー:", error);
     });
