@@ -365,7 +365,8 @@ const final =
 /* ====================
    音声設定
 ==================== */
-const scream = new Audio("https://soundeffect-lab.info");
+// あなたのGitHubの「scream.mp3」を直接読み込むように指定しました
+const scream = new Audio("scream.mp3");
 
 
 /* ====================
@@ -381,10 +382,10 @@ enterButton.addEventListener("click", function() {
     loading.style.display = "flex";
 
     /* 
-       【超重要：スマホの音ブロックを完全に解除する処理】
-       ユーザーがタップした「この瞬間」に、音量1.0のままで一度再生を開始し、
-       1ミリ秒後にすぐ一時停止させます。
-       これにより、スマホ側に「安全なユーザー発信の音声」として完全に承認させます。
+       【スマホ音ブロック強制解除処理】
+       ユーザーが「入場する」ボタンをタップしたまさにその瞬間に、
+       音量を1.0にセットした状態で一度音声を再生させ、1ミリ秒後にすぐ一時停止（ストップ）させます。
+       これでスマホのブラウザへ「これはユーザーが自分の意志で鳴らした安全な音だ」と100%承認させます。
     */
     scream.play().then(function() {
         scream.pause();
@@ -394,7 +395,6 @@ enterButton.addEventListener("click", function() {
         console.log("アクティベートエラー:", error);
     });
 
-
     /*
        確実に2秒待つ（ローディング時間）
     */
@@ -403,13 +403,11 @@ enterButton.addEventListener("click", function() {
         /* Loadingを消す */
         loading.style.display = "none";
 
-
         /* ====================
            ピエロ登場
         ==================== */
         jumpscare.style.display = "block";
         jumpscare.classList.add("shake");
-
 
         /* ====================
            叫び声（ここで本再生スタート）
@@ -418,9 +416,8 @@ enterButton.addEventListener("click", function() {
         scream.volume = 1.0;
         
         scream.play().catch(function(error) {
-            console.log("本再生エラー:", error);
+            console.log("再生エラー:", error);
         });
-
 
         /*
            1.5秒間ピエロを表示
@@ -440,7 +437,6 @@ enterButton.addEventListener("click", function() {
             scream.pause();
 
         }, 1500);
-
 
     }, 2000);
 
