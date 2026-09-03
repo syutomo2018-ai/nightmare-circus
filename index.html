@@ -359,7 +359,7 @@ const jumpscare =
     document.getElementById("jumpscare");
 
 const final =
-    document.getElementById;
+    document.getElementById("final"); // 【修正】途切れていた記述を正しく修復しました
 
 
 /* ====================
@@ -381,15 +381,14 @@ enterButton.addEventListener("click", function() {
     loading.style.display = "flex";
 
     /* 
-       【スマホ対策の切り札】
-       ボタンを押した「この瞬間」に、音量をゼロにした状態で再生をスタートさせます。
-       これでスマホの強力な自動再生ブロック機能を完全に突破（すり抜け）します。
+       【重要】さっき音が出ていた時と同じ、
+       ボタンを押した瞬間に音量をゼロにして再生をスタートさせる対策処理です。
     */
     scream.volume = 0.0;
     scream.play().then(function() {
-        console.log("スマホの音声ブロック突破成功（裏で再生開始）");
+        console.log("裏再生スタート成功");
     }).catch(function(error) {
-        console.log("初期再生エラー:", error);
+        console.log("再生エラー:", error);
     });
 
 
@@ -412,7 +411,6 @@ enterButton.addEventListener("click", function() {
         /* ====================
            叫び声（ここで音量を一気にマックスにする）
         ==================== */
-        // 再生位置を最初に戻し、ミュートを解除して1.0（最大音量）にします
         scream.currentTime = 0;
         scream.volume = 1.0;
 
@@ -429,7 +427,7 @@ enterButton.addEventListener("click", function() {
             /* ====================
                最終画面
             ==================== */
-            document.getElementById("final").style.display = "flex";
+            final.style.display = "flex";
 
             // 最終画面になったら叫び声を止める
             scream.pause();
@@ -445,4 +443,3 @@ enterButton.addEventListener("click", function() {
 
 </body>
 </html>
-
