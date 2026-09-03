@@ -359,7 +359,7 @@ const jumpscare =
     document.getElementById("jumpscare");
 
 const final =
-    document.getElementById("final"); // 【修正】途切れていた記述を正しく修復しました
+    document.getElementById("final");
 
 
 /* ====================
@@ -381,14 +381,17 @@ enterButton.addEventListener("click", function() {
     loading.style.display = "flex";
 
     /* 
-       【重要】さっき音が出ていた時と同じ、
-       ボタンを押した瞬間に音量をゼロにして再生をスタートさせる対策処理です。
+       【超重要：スマホの音ブロックを完全に解除する処理】
+       ユーザーがタップした「この瞬間」に、音量1.0のままで一度再生を開始し、
+       1ミリ秒後にすぐ一時停止させます。
+       これにより、スマホ側に「安全なユーザー発信の音声」として完全に承認させます。
     */
-    scream.volume = 0.0;
     scream.play().then(function() {
-        console.log("裏再生スタート成功");
+        scream.pause();
+        scream.currentTime = 0;
+        console.log("スマホの音声アクティベート成功");
     }).catch(function(error) {
-        console.log("再生エラー:", error);
+        console.log("アクティベートエラー:", error);
     });
 
 
@@ -409,10 +412,14 @@ enterButton.addEventListener("click", function() {
 
 
         /* ====================
-           叫び声（ここで音量を一気にマックスにする）
+           叫び声（ここで本再生スタート）
         ==================== */
         scream.currentTime = 0;
         scream.volume = 1.0;
+        
+        scream.play().catch(function(error) {
+            console.log("本再生エラー:", error);
+        });
 
 
         /*
