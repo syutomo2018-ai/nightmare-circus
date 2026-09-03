@@ -383,58 +383,63 @@ enterButton.addEventListener("click", function() {
     loading.style.display = "flex";
 
     /* 
-       【修正】クリックした瞬間に音声を一時停止（読み込みだけ行う）の状態で、
-       あらかじめ一番最後まで「先読み（プリロード）」を強制させます。
+       【修正ポイント】
+       2秒間のタイマーを廃止しました。
+       代わりに、音声ファイルの先読み（load）を開始し、
+       ブラウザが「音声を今すぐズレなく鳴らせる準備ができた（canplaythrough）」と
+       判断したイベントを感知するまで待機させます。
     */
     scream.load();
 
-    /*
-       2秒待つ（ローディング時間）
-    */
-    setTimeout(function() {
-
-        /* Loadingを消す */
-        loading.style.display = "none";
-
-
-        /* ====================
-           ピエロ登場と音声を【完全同期】
-        ==================== */
-        // 再生位置の初期化と音量をセットしてから同時に実行
-        scream.currentTime = 0;
-        scream.volume = 1.0;
+    // 音声データの準備が完全に整った瞬間に発動する処理
+    scream.addEventListener("canplaythrough", function startJumpscare() {
         
-        // 画像表示
-        jumpscare.style.display = "block";
-        jumpscare.classList.add("shake");
+        // この処理が何度も実行されないように一度イベントを解除
+        scream.removeEventListener("canplaythrough", startJumpscare);
 
-        // 音声再生（完全に同時にスタート）
-        scream.play().catch(function(error) {
-            console.log("音声再生エラー:", error);
-        });
-
-
-        /*
-           1.5秒間ピエロを表示
+        /* 
+           準備ができたら、さらに少しだけタメ（300ミリ秒）を作って
+           ローディング画面を消し、画像と音を同時に出します。
         */
         setTimeout(function() {
+            
+            /* Loadingを消す */
+            loading.style.display = "none";
 
-            /* ピエロを消す */
-            jumpscare.classList.remove("shake");
-            jumpscare.style.display = "none";
+            /* 音声設定を最適化 */
+            scream.currentTime = 0;
+            scream.volume = 1.0;
+            
+            /* 【完全同期】画像表示と音声再生の命令を1つの枠組みに収めました */
+            jumpscare.style.display = "block";
+            jumpscare.classList.add("shake");
 
-            /* ====================
-               最終画面
-            ==================== */
-            final.style.display = "flex";
+            scream.play().catch(function(error) {
+                console.log("音声再生エラー:", error);
+            });
 
-            // 最終画面になったら叫び声を止める
-            scream.pause();
+            /*
+               1.5秒間ピエロを表示
+            */
+            setTimeout(function() {
 
-        }, 1500);
+                /* ピエロを消す */
+                jumpscare.classList.remove("shake");
+                jumpscare.style.display = "none";
 
+                /* ====================
+                   最終画面
+                ==================== */
+                final.style.display = "flex";
 
-    }, 2000);
+                // 最終画面になったら叫び声を止める
+                scream.pause();
+
+            }, 1500);
+
+        }, 300); // 準備完了後のわずかなバッファ時間
+
+    });
 
 });
 
