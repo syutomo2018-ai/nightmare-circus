@@ -299,7 +299,8 @@ h1 {
 
 <div id="jumpscare">
 
-    <img src="clown_jumpscare.jpg">
+    <!-- 提供いただいたピエロの画像URLを設定しました -->
+    <img src="https://imagesimages.org" alt="ピエロ">
 
 </div>
 
@@ -365,11 +366,19 @@ const final =
 
 
 /* ====================
+   音声設定
+==================== */
+
+// アップロードされた音声ファイルのパス
+const scream = new Audio("Horror-Scream03/Horror-Scream03-1(High-Reverb).mp3");
+scream.volume = 1.0;
+
+
+/* ====================
    入場ボタン
 ==================== */
 
 enterButton.addEventListener("click", function() {
-
 
     /* 最初の画面を消す */
 
@@ -379,6 +388,13 @@ enterButton.addEventListener("click", function() {
     /* Loading表示 */
 
     loading.style.display = "flex";
+
+
+    /* 
+       ブラウザの自動再生ブロックを回避するため、
+       ユーザーがクリックしたこの瞬間に音声をロード（先読み）する
+    */
+    scream.load();
 
 
     /*
@@ -408,11 +424,6 @@ enterButton.addEventListener("click", function() {
         /* ====================
            叫び声
         ==================== */
-
-        const scream =
-            new Audio("scream.mp3");
-
-        scream.volume = 1.0;
 
         scream.play().catch(function(error) {
 
