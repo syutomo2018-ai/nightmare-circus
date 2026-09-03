@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>悪夢のサーカス</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: sans-serif;
+}
+
+/* --------------------
+   最初の画面
+-------------------- */
+
+#start {
+    width: 100%;
+    height: 100vh;
+    background:
+        radial-gradient(circle at center, #202020 0%, #050505 60%, #000 100%);
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+}
+
+.circus {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-size: 42px;
+    letter-spacing: 8px;
+    margin: 10px;
+}
+
+.subtitle {
+    color: #aaa;
+    font-size: 15px;
+    margin-bottom: 40px;
+}
+
+#enterButton {
+    padding: 16px 45px;
+    border: 1px solid white;
+    background: transparent;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#enterButton:hover {
+    background: white;
+    color: black;
+}
+
+
+/* --------------------
+   Loading
+-------------------- */
+
+#loading {
+    display: none;
+
+    width: 100%;
+    height: 100vh;
+
+    justify-content: center;
+    align-items: center;
+
+    background: black;
+    color: white;
+
+    font-size: 25px;
+}
+
+
+/* --------------------
+   カウントダウン
+-------------------- */
+
+#countdown {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    justify-content: center;
+    align-items: center;
+
+    background: #000;
+    color: white;
+
+    font-size: 100px;
+    font-weight: bold;
+
+    z-index: 10;
+}
+
+
+/* --------------------
+   ピエロ
+-------------------- */
+
+#jumpscare {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: black;
+
+    z-index: 100;
+}
+
+#jumpscare img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* --------------------
+   ピエロ表示時の揺れ
+-------------------- */
+
+.shake {
+    animation: shake 0.08s infinite;
+}
+
+@keyframes shake {
+
+    0% {
+        transform: translate(0, 0);
+    }
+
+    25% {
+        transform: translate(8px, -8px);
+    }
+
+    50% {
+        transform: translate(-8px, 7px);
+    }
+
+    75% {
+        transform: translate(7px, 8px);
+    }
+
+    100% {
+        transform: translate(-7px, -7px);
+    }
+}
+
+
+/* --------------------
+   「みつけた。」
+-------------------- */
+
+#found {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    background: black;
+    color: white;
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 45px;
+    font-weight: bold;
+
+    z-index: 200;
+}
+
+
+/* --------------------
+   最終画面
+-------------------- */
+
+#final {
+    display: none;
+
+    width: 100%;
+    height: 100vh;
+
+    background:
+        radial-gradient(circle at center, #1a1a1a, #000 75%);
+
+    color: white;
+
+    text-align: center;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#final h2 {
+    font-size: 42px;
+    letter-spacing: 6px;
+    margin-bottom: 25px;
+}
+
+.wait {
+    font-size: 25px;
+    margin: 15px;
+}
+
+.question {
+    color: #aaa;
+    margin-bottom: 35px;
+}
+
+
+/* --------------------
+   Instagram
+-------------------- */
+
+.instagram {
+    display: inline-block;
+
+    padding: 14px 30px;
+
+    border: 1px solid white;
+
+    color: white;
+    text-decoration: none;
+
+    font-size: 16px;
+
+    transition: 0.3s;
+}
+
+.instagram:hover {
+    background: white;
+    color: black;
+}
+
+
+/* スマホ用 */
+
+@media (max-width: 600px) {
+
+    h1 {
+        font-size: 32px;
+        letter-spacing: 5px;
+    }
+
+    .circus {
+        font-size: 50px;
+    }
+
+    #found {
+        font-size: 35px;
+    }
+
+    #final h2 {
+        font-size: 30px;
+    }
+
+    .wait {
+        font-size: 22px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ====================
+     最初の画面
+===================== -->
+
+<div id="start">
+
+    <div class="circus">🎪</div>
+
+    <h1>悪夢のサーカス</h1>
+
+    <div class="subtitle">
+        もうすぐ開演します。
+    </div>
+
+    <button id="enterButton">
+        入場する
+    </button>
+
+</div>
+
+
+<!-- ====================
+     Loading
+===================== -->
+
+<div id="loading">
+    Loading...
+</div>
+
+
+<!-- ====================
+     カウントダウン
+===================== -->
+
+<div id="countdown">
+    3
+</div>
+
+
+<!-- ====================
+     ジャンプスケア
+===================== -->
+
+<div id="jumpscare">
+
+    <!-- GitHubにこの名前で画像をアップロード -->
+    <img src="clown_jumpscare.png">
+
+</div>
+
+
+<!-- ====================
+     みつけた
+===================== -->
+
+<div id="found">
+    みつけた。
+</div>
+
+
+<!-- ====================
+     最終画面
+===================== -->
+
+<div id="final">
+
+    <div class="circus">🎪</div>
+
+    <h2>悪夢のサーカス</h2>
+
+    <div class="wait">
+        サーカスで待ってる。
+    </div>
+
+    <div class="question">
+        あなたは最後まで耐えられる？
+    </div>
+
+    <!-- InstagramのURLはここを変更 -->
+    <a
+        class="instagram"
+        href="ここにInstagramのURL"
+        target="_blank"
+    >
+        📷 Instagramを見る
+    </a>
+
+</div>
+
+
+
+<script>
+
+/* ボタン */
+const enterButton = document.getElementById("enterButton");
+
+/* 各画面 */
+const start = document.getElementById("start");
+const loading = document.getElementById("loading");
+const countdown = document.getElementById("countdown");
+const jumpscare = document.getElementById("jumpscare");
+const found = document.getElementById("found");
+const final = document.getElementById("final");
+
+
+/* 入場ボタンを押したとき */
+
+enterButton.addEventListener("click", function() {
+
+    /* 最初の画面を消す */
+    start.style.display = "none";
+
+    /* Loading表示 */
+    loading.style.display = "flex";
+
+
+    /* 2秒後 */
+
+    setTimeout(function() {
+
+        loading.style.display = "none";
+
+        countdown.style.display = "flex";
+
+
+        /* 3 */
+
+        countdown.textContent = "3";
+
+
+        /* 1秒後 */
+
+        setTimeout(function() {
+
+            countdown.textContent = "2";
+
+        }, 1000);
+
+
+        /* 2秒後 */
+
+        setTimeout(function() {
+
+            countdown.textContent = "1";
+
+        }, 2000);
+
+
+        /* 3秒後 → ジャンプスケア */
+
+        setTimeout(function() {
+
+            countdown.style.display = "none";
+
+            /* ピエロ表示 */
+            jumpscare.style.display = "block";
+
+            /* 画面揺れ */
+            jumpscare.classList.add("shake");
+
+
+            /*
+             * 約1秒間ピエロを表示
+             */
+
+            setTimeout(function() {
+
+                jumpscare.classList.remove("shake");
+
+                jumpscare.style.display = "none";
+
+
+                /* 「みつけた。」 */
+
+                found.style.display = "flex";
+
+
+                /* 1.5秒後 */
+
+                setTimeout(function() {
+
+                    found.style.display = "none";
+
+                    /* 最終画面 */
+
+                    final.style.display = "flex";
+
+                }, 1500);
+
+
+            }, 1200);
+
+
+        }, 3000);
+
+
+    }, 2000);
+
+});
+
+</script>
+
+</body>
+</html>
